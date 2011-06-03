@@ -24,31 +24,64 @@
             <div class="der">
                 <form action="/tarjeta/<?php tgc_numero_targeta() ?>/"  method="post" name="tgc_tarjeta_form">
                     <div class="seccion">
-                    <?php get_template_part("login_form") ?>
-                </div>
-                <div id="cuentanos" class="seccion">
-                    <label for="tgc_cuentanos">Cu&eacute;ntanos cómo la has recibido</label>
-                    <textarea id="tgc_cuentanos" name="tgc_cuentanos" rows="3" cols="40"></textarea>
-                </div>
-                <div class="seccion clearfix">
-                    <div id="cuando">
-                        <label for="tgc_date">Cu&aacute;ndo</label>
-                        <input type="text" id="tgc_date" name="tgc_date"/>
-                    </div>
-                    <div id="donde">
-                        <label for="tgc_place">D&oacute;nde</label>
-                        <input type="text" id="tgc_place" name="tgc_place"/>
-                    </div>
-                </div>
-                <div id="deseo" class="seccion">
-                    <label for="tgc_deseo">Qu&eacute; te motiva a empezar esta cadena</label>
-                    <textarea id="tgc_deseo" name="tgc_deseo" rows="3" cols="40"></textarea>
-                </div>
-                <input type="submit" value="Agregar"/>
-            </form>
-        </div>
+						<?php get_template_part("login_form") ?>
+					</div>
+					<div id="cuentanos" class="seccion">
+						<label for="tgc_cuentanos">Cu&eacute;ntanos cómo la has recibido</label>
+						<textarea id="tgc_cuentanos" name="tgc_cuentanos" rows="3" cols="40"></textarea>
+					</div>
+					<div class="seccion clearfix">
+						<div id="cuando">
+							<label for="tgc_date">Cu&aacute;ndo</label>
+							<input type="text" id="tgc_date" name="tgc_date"/>
+						</div>
+						<div id="donde">
+							<label for="tgc_place">D&oacute;nde</label>
+							<input type="text" id="tgc_place" name="tgc_place"/>
+						</div>
+					</div>
+					<div id="deseo" class="seccion">
+						<label for="tgc_deseo">Qu&eacute; te motiva a empezar esta cadena</label>
+						<textarea id="tgc_deseo" name="tgc_deseo" rows="3" cols="40"></textarea>
+					</div>
+					 <?php if (!is_user_logged_in()) : ?>
+					<?php
+
+						require_once('recaptchalib.php');
+
+						// Get a key from https://www.google.com/recaptcha/admin/create
+						$publickey = "6LdS9MQSAAAAADl6aHPDs0Qh_mahzH_32GVeWnOK";
+						$privatekey = "6LdS9MQSAAAAAMZnBfbRL-lNb-R6ncI6yfkUD733";
+
+						# the response from reCAPTCHA
+						$resp = null;
+						# the error code from reCAPTCHA, if any
+						$error = null;
+
+						# was there a reCAPTCHA response?
+						if ($_POST["recaptcha_response_field"]) {
+								$resp = recaptcha_check_answer ($privatekey,
+																$_SERVER["REMOTE_ADDR"],
+																$_POST["recaptcha_challenge_field"],
+																$_POST["recaptcha_response_field"]);
+
+								if ($resp->is_valid) {
+										echo "You got it!";
+								} else {
+										# set the error code so that we can display it
+										$error = $resp->error;
+								}
+						}
+						echo recaptcha_get_html($publickey, $error);
+					?>
+					<?php endif; ?>
+					
+					<input type="submit" value="Agregar"/>
+				</form>
+			</div>
         <?php else: ?>
                         <div class="der">
+						
                             <h2>¡Gracias por poner el primer eslabón!</h2>
                             <div id="cuentanos" class="seccion">
                                 <label for="tgc_cuentanos">Cu&eacute;ntanos cómo la has recibido</label>

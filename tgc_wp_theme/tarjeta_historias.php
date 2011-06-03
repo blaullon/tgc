@@ -35,9 +35,10 @@
                         </div>
                     </div>
                     <div id="historia">
-                        <label for="tgc_story">Cómo ha sido</label>
+                        <label for="tgc_story">C&oacute;mo ha sido</label>
                         <textarea id="tgc_story" name="tgc_story" rows="3" cols="40"><?php echo $_POST['tgc_story'] ?></textarea>
                     </div>
+					
                 </div>
                 <input type="submit" value="Agregar"/>
             </form>
